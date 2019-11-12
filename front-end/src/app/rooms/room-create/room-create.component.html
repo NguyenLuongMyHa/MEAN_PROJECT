@@ -1,0 +1,71 @@
+<mat-card>
+  <div class="row">
+    <div class="col-sm">
+      <form (submit)="onAddRoom(roomForm)" #roomForm="ngForm">
+        <h3 class="center-text">Add New Room For Rent</h3>
+        <!--ROOM TITLE-->
+        <mat-form-field class="room-create-full-width">
+          <input matInput name="title" placeholder="Room title" [(ngModel)]="newRoomTitle" required #title="ngModel">
+          <mat-error *ngIf="title.invalid">Please enter a room title.</mat-error>
+        </mat-form-field>
+        <!--ROOM DESCRIPTION-->
+        <mat-form-field class="room-create-full-width">
+          <textarea matInput name="description" [(ngModel)]="newRoomDescription" rows="2" required
+            #description="ngModel" placeholder="Room description">
+        </textarea>
+          <mat-error *ngIf="description.invalid">Please enter description for this room.</mat-error>
+        </mat-form-field>
+        <!--ROOM ADDRESS-->
+        <mat-form-field class="room-create-full-width">
+          <input matInput name="address" placeholder="Room address" [(ngModel)]="newRoomAddress" required
+            #address="ngModel">
+          <mat-error *ngIf="address.invalid">Please enter address of this room.</mat-error>
+        </mat-form-field>
+        <!--ROOM PRICE-->
+        <mat-form-field class="room-create-full-width">
+          <input matInput name="price" [(ngModel)]="newRoomPrice" rows="2" required #price="ngModel"
+            placeholder="Room price">
+          <mat-error *ngIf="price.invalid">Please enter price for this room.</mat-error>
+        </mat-form-field>
+        <!--ROOM DISCOUNT-->
+        <mat-form-field class="room-create-full-width">
+          <input matInput name="discount" placeholder="Room discount" [(ngModel)]="newRoomDiscount">
+        </mat-form-field>
+        <!--ROOM TYPE-->
+        <mat-form-field class="room-create-full-width">
+          <mat-label>Select a type for this room</mat-label>
+          <mat-select [(ngModel)]="selectedType" name="type">
+            <mat-option *ngFor="let type of types" [value]="type.capacity">
+              {{type.typeName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <p> Capacity: {{selectedType}} </p>
+
+        <button style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Add Room For Rent</button>
+      </form>
+    </div>
+    <div class="col-sm">
+      <h3 class="center-text">Room Card Preview</h3>
+      <mat-card class="room-create-preview-card">
+        <mat-card-header>
+          <mat-card-title> {{ newRoomTitle }}</mat-card-title>
+          <mat-card-subtitle>{{ newRoomAddress }}</mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image src="assets/images/hotel.jpg" alt="Photo of a room">
+        <mat-card-content>
+          {{ newRoomDescription }}
+        </mat-card-content>
+        <mat-card-actions>
+
+          <button mat-raised-button color="primary">RENT</button>
+
+          <button mat-raised-button>LIKE</button>
+
+          <button mat-raised-button>SHARE</button>
+
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</mat-card>

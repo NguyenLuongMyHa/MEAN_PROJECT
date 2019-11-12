@@ -1,0 +1,17 @@
+<h2 class="center-text">LIST ROOMS FOR RENT</h2>
+<mat-accordion multi="true" *ngIf="rooms.length >0">
+  <mat-expansion-panel *ngFor="let room of rooms">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ room.title }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p>{{ room.description }}</p>
+    <mat-action-row>
+      <button mat-button color = "primary">EDIT</button>
+      <button mat-button color = "warn">DELETE</button>
+
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<h3 class="center-text" *ngIf="rooms.length <=0">No rooms add yet!</h3>
