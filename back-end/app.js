@@ -8,7 +8,7 @@ const app = express();
 mongoose.connect("mongodb+srv://HaNguyen:HaNguyen@clustermean-wlhzz.mongodb.net/meanproject?retryWrites=true&w=majority", {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    })
+})
     .then(() => {
         console.log('Connected to database');
     })
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
     );
     res.setHeader(
         "Access-Control-Allow-Methods",
-        "GET, POST, PATCH, DELETE, OPTIONS"
+        "GET, POST, PATCH, PUT, DELETE, OPTIONS"
     );
     next();
 });
@@ -47,6 +47,21 @@ app.post("/api/rooms", (req, res, next) => {
             message: "Room added successfully",
             roomId: createdRoom._id
         });
+    });
+});
+app.put("/api/rooms/:id", (req, res, next) => {
+    const room = new Room({
+        _id: req.body.id,
+        title: req.body.title,
+        description: req.body.description,
+        address: req.body.address,
+        price: req.body.price,
+        discount: req.body.discount,
+        typeid: req.body.typeid
+    });
+    Room.updateOne({ _id: req.params.id }, room).then(result => {
+        console.log(result);
+        res.status(200).json({ message: "Update successful!" });
     });
 });
 

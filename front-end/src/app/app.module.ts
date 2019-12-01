@@ -17,7 +17,6 @@ import { AppComponent } from './app.component';
 import { RoomCreateComponent } from './rooms/room-create/room-create.component';
 import { HeaderComponent } from './header/header.component';
 import { RoomListComponent } from './rooms/room-list/room-list.component';
-import { RoomsService } from './rooms/rooms.service';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({

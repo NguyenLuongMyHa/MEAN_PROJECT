@@ -1,35 +1,37 @@
 <mat-card>
   <div class="row">
     <div class="col-sm">
-      <form (submit)="onAddRoom(roomForm)" #roomForm="ngForm">
+      <form
+      (submit)="onSaveRoom(roomForm)"
+      #roomForm="ngForm">
         <h3 class="center-text">Add New Room For Rent</h3>
         <!--ROOM TITLE-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="title" placeholder="Room title" [(ngModel)]="newRoomTitle" required #title="ngModel">
+          <input matInput name="title" placeholder="Room title" [ngModel]="room.title" required #title="ngModel">
           <mat-error *ngIf="title.invalid">Please enter a room title.</mat-error>
         </mat-form-field>
         <!--ROOM DESCRIPTION-->
         <mat-form-field class="room-create-full-width">
-          <textarea matInput name="description" [(ngModel)]="newRoomDescription" rows="2" required
+          <textarea matInput name="description" [ngModel]="room.description" rows="2" required
             #description="ngModel" placeholder="Room description">
         </textarea>
           <mat-error *ngIf="description.invalid">Please enter description for this room.</mat-error>
         </mat-form-field>
         <!--ROOM ADDRESS-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="address" placeholder="Room address" [(ngModel)]="newRoomAddress" required
+          <input matInput name="address" placeholder="Room address" [ngModel]="room.address" required
             #address="ngModel">
           <mat-error *ngIf="address.invalid">Please enter address of this room.</mat-error>
         </mat-form-field>
         <!--ROOM PRICE-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="price" [(ngModel)]="newRoomPrice" rows="2" required #price="ngModel"
+          <input matInput name="price" [ngModel]="room.price" rows="2" required #price="ngModel"
             placeholder="Room price">
           <mat-error *ngIf="price.invalid">Please enter price for this room.</mat-error>
         </mat-form-field>
         <!--ROOM DISCOUNT-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="discount"  [(ngModel)]="newRoomDiscount" placeholder="Room discount" #discount="ngModel">
+          <input matInput name="discount"  [ngModel]="room.discount" #discount="ngModel" placeholder="Room discount">
         </mat-form-field>
         <!--ROOM TYPE-->
         <mat-form-field class="room-create-full-width">
@@ -41,9 +43,14 @@
           </mat-select>
         </mat-form-field>
         <p *ngIf="selectedType">Capacity: {{getTypeCapacityById(selectedType)}}</p>
-        <button style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Add Room For Rent</button>
+
+
+        <button style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Save Room For Rent</button>
       </form>
     </div>
+
+
+
     <div class="col-sm">
       <h3 class="center-text">Room Card Preview</h3>
       <mat-card class="room-create-preview-card">

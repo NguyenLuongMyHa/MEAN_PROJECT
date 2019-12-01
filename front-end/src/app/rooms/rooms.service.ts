@@ -34,7 +34,9 @@ export class RoomsService {
         this.roomsUpdated.next([...this.rooms]);
       });
   }
-
+  getRoom(id: string) {
+    return { ...this.rooms.find(p => p.id === id) };
+  }
   getRoomUpdateListener() {
     return this.roomsUpdated.asObservable();
   }
@@ -56,6 +58,25 @@ export class RoomsService {
         this.rooms.push(room);
         this.roomsUpdated.next([...this.rooms]);
       });
+  }
+  
+  updateRoom(roomid: string,
+             roomTitle: string,
+             roomDescription: string,
+             roomAddress: string,
+             roomPrice: number,
+             roomDiscount: number,
+             roomTypeid: number) {
+    const room: Room = { id: roomid,
+      title: roomTitle,
+      description: roomDescription,
+      address: roomAddress,
+      price: roomPrice,
+      discount: roomDiscount,
+      typeid: roomTypeid};
+    this.http
+      .put("http://localhost:3000/api/rooms/" + roomid, room)
+      .subscribe(response => console.log(response));
   }
 
   deleteRoom(roomId: string) {
