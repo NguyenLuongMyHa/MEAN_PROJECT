@@ -22,10 +22,10 @@ export class RoomCreateComponent implements OnInit {
   newRoomDiscount = 0;
   selectedType = 1;
   types: ProductType[] = [
-    {id: 1, typeName: 'Single', capacity: 2},
-    {id: 2, typeName: 'Double', capacity: 4},
-    {id: 3, typeName: 'Family', capacity: 8},
-    {id: 4, typeName: 'Family Deluxe', capacity: 10},
+    { id: 1, typeName: 'Single', capacity: 2 },
+    { id: 2, typeName: 'Double', capacity: 4 },
+    { id: 3, typeName: 'Family', capacity: 8 },
+    { id: 4, typeName: 'Family Deluxe', capacity: 10 },
   ];
   room: Room;
   private mode = 'create';
@@ -35,19 +35,31 @@ export class RoomCreateComponent implements OnInit {
     public roomsService: RoomsService,
     public route: ActivatedRoute) { }
   getTypeCapacityById(id) {
-    return this.types.find( x => x.id === id).capacity;
+    return this.types.find(x => x.id === id).capacity;
   }
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('roomId')) {
         this.mode = 'edit';
         this.roomId = paramMap.get('roomId');
-        this.room = this.roomsService.getRoom(this.roomId);
+        this.roomsService.getRoom(this.roomId)
+        .subscribe(roomData => {
+          this.room = {
+            id: roomData._id,
+            title: roomData.title,
+            description: roomData.description,
+            address: roomData.description,
+            price: roomData.price,
+            discount: roomData.discount,
+            typeid: roomData.typeid
+          };
+        });
       } else {
         this.mode = 'create';
         this.roomId = null;
       }
-    });  }
+    });
+  }
 
   onAddRoom(form: NgForm) {
     if (form.invalid) {
@@ -60,7 +72,7 @@ export class RoomCreateComponent implements OnInit {
       form.value.price,
       form.value.discount,
       form.value.type,
-      );
+    );
     form.resetForm();
   }
   onSaveRoom(form: NgForm) {
@@ -75,7 +87,7 @@ export class RoomCreateComponent implements OnInit {
         form.value.price,
         form.value.discount,
         form.value.type,
-        );
+      );
     } else {
       this.roomsService.updateRoom(
         this.roomId,

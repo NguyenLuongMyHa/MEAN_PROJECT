@@ -75,7 +75,15 @@ app.get("/api/rooms", (req, res, next) => {
             });
         });
 });
-
+app.get("/api/rooms/:id", (req, res, next) => {
+    Room.findById(req.params.id).then(room => {
+      if (room) {
+        res.status(200).json(room);
+      } else {
+        res.status(404).json({ message: "Room not found!" });
+      }
+    });
+  });
 app.delete("/api/rooms/:id", (req, res, next) => {
     Room.deleteOne({ _id: req.params.id })
         .then(result => {
