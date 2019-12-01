@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { RoomsService } from '../rooms.service';
 import { Room } from '../room.model';
-import { ActivatedRoute, ParamMap } from '@angular/router';
 
 export interface ProductType {
   id: number;
@@ -20,7 +20,6 @@ export class RoomCreateComponent implements OnInit {
   newRoomAddress = 'New Address';
   newRoomPrice = 1000000;
   newRoomDiscount = 0;
-  selectedType = 1;
   types: ProductType[] = [
     { id: 1, typeName: 'Single', capacity: 2 },
     { id: 2, typeName: 'Double', capacity: 4 },
@@ -28,81 +27,110 @@ export class RoomCreateComponent implements OnInit {
     { id: 4, typeName: 'Family Deluxe', capacity: 10 },
   ];
   room: Room;
-  mode = 'create';
   isLoading = false;
+  form: FormGroup;
+  imagePreview: string | ArrayBuffer;
+  mode = 'create';
   private roomId: string;
 
   constructor(
     public roomsService: RoomsService,
     public route: ActivatedRoute) { }
-  getTypeCapacityById(id) {
-    return this.types.find(x => x.id === id).capacity;
+  getTypeById(id) {
+    return this.types.find(x => x.id === id);
   }
   ngOnInit() {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      description: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      address: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      price: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      discount: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      typeid: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      image: new FormControl(null, {
+        validators: [Validators.required]
+      })
+    });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('roomId')) {
         this.mode = 'edit';
         this.roomId = paramMap.get('roomId');
         this.isLoading = true;
         this.roomsService.getRoom(this.roomId)
-        .subscribe(roomData => {
-          this.isLoading = false;
-          this.room = {
-            id: roomData._id,
-            title: roomData.title,
-            description: roomData.description,
-            address: roomData.description,
-            price: roomData.price,
-            discount: roomData.discount,
-            typeid: roomData.typeid
-          };
-        });
+          .subscribe(roomData => {
+            this.isLoading = false;
+            this.room = {
+              id: roomData._id,
+              title: roomData.title,
+              description: roomData.description,
+              address: roomData.address,
+              price: roomData.price,
+              discount: roomData.discount,
+              typeid: roomData.typeid
+            };
+            this.form.setValue({
+              title: this.room.title,
+              description: this.room.description,
+              address: this.room.address,
+              price: this.room.price,
+              discount: this.room.discount,
+              typeid: this.room.typeid
+            });
+          });
       } else {
         this.mode = 'create';
         this.roomId = null;
       }
     });
   }
-
-  onAddRoom(form: NgForm) {
-    if (form.invalid) {
-      return;
-    }
-    this.roomsService.addRoom(
-      form.value.title,
-      form.value.description,
-      form.value.address,
-      form.value.price,
-      form.value.discount,
-      form.value.type,
-    );
-    form.resetForm();
+  onImagePicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.form.patchValue({image: file});
+    this.form.get('image').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(file);
   }
-  onSaveRoom(form: NgForm) {
-    if (form.invalid) {
+
+  onSaveRoom() {
+    if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     if (this.mode === 'create') {
       this.roomsService.addRoom(
-        form.value.title,
-        form.value.description,
-        form.value.address,
-        form.value.price,
-        form.value.discount,
-        form.value.type,
+        this.form.value.title,
+        this.form.value.description,
+        this.form.value.address,
+        this.form.value.price,
+        this.form.value.discount,
+        this.form.value.typeid,
       );
     } else {
       this.roomsService.updateRoom(
         this.roomId,
-        form.value.title,
-        form.value.description,
-        form.value.address,
-        form.value.price,
-        form.value.discount,
-        form.value.type,
+        this.form.value.title,
+        this.form.value.description,
+        this.form.value.address,
+        this.form.value.price,
+        this.form.value.discount,
+        this.form.value.typeid,
       );
     }
-    form.resetForm();
+    this.form.reset();
   }
 }

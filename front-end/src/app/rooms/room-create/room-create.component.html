@@ -2,61 +2,57 @@
 <mat-card *ngIf="!isLoading">
   <div class="row">
     <div class="col-sm">
-      <form
-      (submit)="onSaveRoom(roomForm)"
-      #roomForm="ngForm"
-      >
+      <form [formGroup]="form" (submit)="onSaveRoom()" *ngIf="!isLoading">
         <h3 class="center-text" *ngIf="mode == 'create'">Add New Room For Rent</h3>
         <h3 class="center-text" *ngIf="mode == 'edit'">Edit Room For Rent</h3>
 
         <!--ROOM TITLE-->
         <mat-form-field class="room-create-full-width">
-            <input
-            matInput
-            type="text"
-            name="title"
-            [ngModel]="room?.title"
-            required
-            placeholder="Room Title"
-            #title="ngModel">
-          <mat-error *ngIf="title.invalid">Please enter a room title.</mat-error>
+          <input matInput type="text" formControlName="title" placeholder="Room Title">
+          <mat-error *ngIf="form.get('title').invalid">Please enter a room title.</mat-error>
         </mat-form-field>
         <!--ROOM DESCRIPTION-->
         <mat-form-field class="room-create-full-width">
-          <textarea matInput name="description" [ngModel]="room?.description" rows="2" required
-            #description="ngModel" placeholder="Room description">
+          <textarea matInput formControlName="description" rows="2" placeholder="Room description">
         </textarea>
-          <mat-error *ngIf="description.invalid">Please enter description for this room.</mat-error>
+          <mat-error *ngIf="form.get('description').invalid">Please enter description for this room.</mat-error>
         </mat-form-field>
         <!--ROOM ADDRESS-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="address" placeholder="Room address" [ngModel]="room?.address" required
-            #address="ngModel">
-          <mat-error *ngIf="address.invalid">Please enter address of this room.</mat-error>
+          <input matInput formControlName="address" placeholder="Room address">
+          <mat-error *ngIf="form.get('address').invalid">Please enter address of this room.</mat-error>
         </mat-form-field>
         <!--ROOM PRICE-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="price" [ngModel]="room?.price" rows="2" required #price="ngModel"
-            placeholder="Room price">
-          <mat-error *ngIf="price.invalid">Please enter price for this room.</mat-error>
+          <input matInput formControlName="price" rows="2" placeholder="Room price">
+          <mat-error *ngIf="form.get('price').invalid">Please enter price for this room.</mat-error>
         </mat-form-field>
         <!--ROOM DISCOUNT-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="discount"  [ngModel]="room?.discount" #discount="ngModel" placeholder="Room discount">
+          <input matInput formControlName="discount" placeholder="Room discount">
         </mat-form-field>
         <!--ROOM TYPE-->
         <mat-form-field class="room-create-full-width">
           <mat-label>Select a type for this room</mat-label>
-          <mat-select [(ngModel)]="selectedType" name="type">
+          <mat-select formControlName="typeid">
             <mat-option *ngFor="let type of types" [value]="type.id">
               {{type.typeName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <p *ngIf="selectedType">Capacity: {{getTypeCapacityById(selectedType)}}</p>
-
-        <button *ngIf="mode == 'create'"  style="margin-top: 1rem;" mat-raised-button color="accent"  type="submit">Add Room For Rent</button>
-        <button *ngIf="mode == 'edit'"  style="margin-top: 1rem;" mat-raised-button color="accent"  type="submit">Save Room For Rent</button>
+        <!--IMAGE-->
+        <div>
+          <button mat-stroked-button type="button" (click)="filePicker.click()">Pick Image</button>
+          <input type="file" #filePicker (change)="onImagePicked($event)">
+        </div>
+        <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview">
+          <img [src]="imagePreview" [alt]="form.value.title">
+        </div>
+        <!--SUBMIT-->
+        <button *ngIf="mode == 'create'" style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Add
+          Room For Rent</button>
+        <button *ngIf="mode == 'edit'" style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Save
+          Room</button>
 
       </form>
     </div>
