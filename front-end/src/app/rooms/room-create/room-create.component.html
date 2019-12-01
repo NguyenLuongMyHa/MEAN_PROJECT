@@ -29,19 +29,18 @@
         </mat-form-field>
         <!--ROOM DISCOUNT-->
         <mat-form-field class="room-create-full-width">
-          <input matInput name="discount" placeholder="Room discount" [(ngModel)]="newRoomDiscount">
+          <input matInput name="discount"  [(ngModel)]="newRoomDiscount" placeholder="Room discount" #discount="ngModel">
         </mat-form-field>
         <!--ROOM TYPE-->
         <mat-form-field class="room-create-full-width">
           <mat-label>Select a type for this room</mat-label>
           <mat-select [(ngModel)]="selectedType" name="type">
-            <mat-option *ngFor="let type of types" [value]="type.capacity">
+            <mat-option *ngFor="let type of types" [value]="type.id">
               {{type.typeName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <p> Capacity: {{selectedType}} </p>
-
+        <p *ngIf="selectedType">Capacity: {{getTypeCapacityById(selectedType)}}</p>
         <button style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Add Room For Rent</button>
       </form>
     </div>

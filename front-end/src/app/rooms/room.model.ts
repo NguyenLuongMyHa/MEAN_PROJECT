@@ -5,5 +5,5 @@ export class Room {
   address: string;
   price: number;
   discount: number;
-  typeId: number;
+  typeid: number;
 }

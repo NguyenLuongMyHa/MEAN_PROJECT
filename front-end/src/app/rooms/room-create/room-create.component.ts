@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { RoomService } from '../room.service';
+import { RoomsService } from '../rooms.service';
 
 export interface ProductType {
   id: number;
@@ -13,19 +13,22 @@ export interface ProductType {
   styleUrls: ['./room-create.component.css']
 })
 export class RoomCreateComponent implements OnInit {
-  newRoomTitle = '';
-  newRoomDescription = '';
-  newRoomAddress = '';
-
-  selectedType: string;
+  newRoomTitle = 'New Title';
+  newRoomDescription = 'New Description';
+  newRoomAddress = 'New Address';
+  newRoomPrice = 1000000;
+  newRoomDiscount = 0;
+  selectedType = 1;
   types: ProductType[] = [
     {id: 1, typeName: 'Single', capacity: 2},
     {id: 2, typeName: 'Double', capacity: 4},
     {id: 3, typeName: 'Family', capacity: 8},
     {id: 4, typeName: 'Family Deluxe', capacity: 10},
   ];
-  constructor(public roomsService: RoomService) { }
-
+  constructor(public roomsService: RoomsService) { }
+  getTypeCapacityById(id) {
+    return this.types.find( x => x.id === id).capacity;
+  }
   ngOnInit() {
   }
 
@@ -37,9 +40,10 @@ export class RoomCreateComponent implements OnInit {
       form.value.title,
       form.value.description,
       form.value.address,
-      form.value.typeId,
       form.value.price,
-      form.value.discount);
+      form.value.discount,
+      form.value.type,
+      );
     form.resetForm();
   }
 }

@@ -1,0 +1,13 @@
+Pipes in Angular and pipe() function in RxJS.
+
+1) Pipes in Angular: lấy dữ liệu đầu vào và biến đổi nó thành đầu ra mong muốn
+https://angular.io/guide/pipes
+2) pipe() function in RxJS: link và kết hợp các toán tử, function lại với nhau.
+RxJS Operators are functions that build on the observables foundation to enable sophisticated manipulation of collections.
+
+For example, RxJS defines operators such as map(), filter(), concat(), and flatMap().
+
+You can use pipes to link operators together. Pipes let you combine multiple functions into a single function.
+
+The pipe() function takes as its arguments the functions you want to combine, and returns a new function that, when executed, runs the composed functions in sequence.
+

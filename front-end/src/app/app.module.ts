@@ -13,12 +13,13 @@ import {
   MatSelectModule
 } from '@angular/material';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RoomCreateComponent } from './rooms/room-create/room-create.component';
 import { HeaderComponent } from './header/header.component';
 import { RoomListComponent } from './rooms/room-list/room-list.component';
-import { RoomService } from './rooms/room.service';
+import { RoomsService } from './rooms/rooms.service';
+import { AppRoutingModule } from './app-routing.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +41,7 @@ import { RoomService } from './rooms/room.service';
     MatSelectModule,
     HttpClientModule
   ],
-  providers: [RoomService],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

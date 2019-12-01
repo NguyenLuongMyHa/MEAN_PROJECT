@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Room } from '../room.model';
-import { RoomService } from '../room.service';
 import { Subscription } from 'rxjs';
+import { Room } from '../room.model';
+import { RoomsService } from '../rooms.service';
 
 @Component({
   selector: 'app-room-list',
@@ -16,22 +16,22 @@ export class RoomListComponent implements OnInit, OnDestroy {
 
   ];*/
   rooms: Room[] = [];
-  private roomSubs: Subscription[] = [];
-  roomSubUpdate: Subscription = new Subscription();
-  constructor(public roomsService: RoomService) {}
+  private roomsSub: Subscription;
+  constructor(public roomsService: RoomsService) {}
 
   ngOnInit() {
-    // Get rooms and start to subscribe to know any change
     this.roomsService.getRooms();
-    this.roomSubUpdate = this.roomsService.getRoomUpdateListener().subscribe((rooms: Room[]) => {
-      this.rooms = rooms;
-    });
-    this.roomSubs.push(this.roomSubUpdate);
+    this.roomsSub = this.roomsService.getRoomUpdateListener()
+      .subscribe((rooms: Room[]) => {
+        this.rooms = rooms;
+      });
+  }
+  onDelete(roomId: string) {
+    this.roomsService.deleteRoom(roomId);
   }
 
   ngOnDestroy() {
-    // when component is destroyed, stop subscribe
-    this.roomSubs.forEach((subscription) => subscription.unsubscribe());
+    this.roomsSub.unsubscribe();
   }
 
 }

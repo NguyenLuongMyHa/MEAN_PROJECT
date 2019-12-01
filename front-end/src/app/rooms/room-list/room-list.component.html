@@ -6,12 +6,20 @@
         {{ room.title }}
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <p>{{ room.description }}</p>
+    <p>description: {{ room.description }}</p>
+    <p>address: {{ room.address }}</p>
+    <p>price: {{ room.price }}</p>
+    <p>discount: {{ room.discount }}</p>
+    <p *ngIf=" room.typeid == 1">room type:  Single</p>
+    <p *ngIf=" room.typeid == 2">room type:  Double</p>
+    <p *ngIf=" room.typeid == 3">room type:  Family</p>
+    <p *ngIf=" room.typeid == 4">room type:  Family Deluxe</p>
+
     <mat-action-row>
       <button mat-button color = "primary">EDIT</button>
-      <button mat-button color = "warn">DELETE</button>
+      <button mat-button color="warn" (click)="onDelete(room.id)">DELETE</button>
 
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<h3 class="center-text" *ngIf="rooms.length <=0">No rooms add yet!</h3>
+<h3 class="center-text" *ngIf="rooms.length <=0">No rooms added yet!</h3>
