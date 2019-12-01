@@ -28,7 +28,7 @@ export class RoomCreateComponent implements OnInit {
     { id: 4, typeName: 'Family Deluxe', capacity: 10 },
   ];
   room: Room;
-  private mode = 'create';
+  mode = 'create';
   private roomId: string;
 
   constructor(

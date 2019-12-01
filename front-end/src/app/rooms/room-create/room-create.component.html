@@ -4,7 +4,9 @@
       <form
       (submit)="onSaveRoom(roomForm)"
       #roomForm="ngForm">
-        <h3 class="center-text">Add New Room For Rent</h3>
+        <h3 class="center-text" *ngIf="mode == 'create'">Add New Room For Rent</h3>
+        <h3 class="center-text" *ngIf="mode == 'edit'">Edit Room For Rent</h3>
+
         <!--ROOM TITLE-->
         <mat-form-field class="room-create-full-width">
             <input
@@ -51,8 +53,9 @@
         </mat-form-field>
         <p *ngIf="selectedType">Capacity: {{getTypeCapacityById(selectedType)}}</p>
 
+        <button *ngIf="mode == 'create'"  style="margin-top: 1rem;" mat-raised-button color="accent"  type="submit">Add Room For Rent</button>
+        <button *ngIf="mode == 'edit'"  style="margin-top: 1rem;" mat-raised-button color="accent"  type="submit">Save Room For Rent</button>
 
-        <button style="margin-top: 1rem;" mat-raised-button color="accent" type="submit">Save Room For Rent</button>
       </form>
     </div>
 
