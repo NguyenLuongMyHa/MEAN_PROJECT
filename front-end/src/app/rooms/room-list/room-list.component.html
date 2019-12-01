@@ -1,4 +1,5 @@
 <h2 class="center-text">LIST ROOMS FOR RENT</h2>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-accordion multi="true" *ngIf="rooms.length >0">
   <mat-expansion-panel *ngFor="let room of rooms">
     <mat-expansion-panel-header>
@@ -22,4 +23,4 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<h3 class="center-text" *ngIf="rooms.length <=0">No rooms added yet!</h3>
+<h3 class="center-text"  *ngIf="!isLoading && rooms.length <=0">No rooms added yet!</h3>

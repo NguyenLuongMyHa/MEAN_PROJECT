@@ -29,6 +29,7 @@ export class RoomCreateComponent implements OnInit {
   ];
   room: Room;
   mode = 'create';
+  isLoading = false;
   private roomId: string;
 
   constructor(
@@ -42,8 +43,10 @@ export class RoomCreateComponent implements OnInit {
       if (paramMap.has('roomId')) {
         this.mode = 'edit';
         this.roomId = paramMap.get('roomId');
+        this.isLoading = true;
         this.roomsService.getRoom(this.roomId)
         .subscribe(roomData => {
+          this.isLoading = false;
           this.room = {
             id: roomData._id,
             title: roomData.title,
@@ -79,6 +82,7 @@ export class RoomCreateComponent implements OnInit {
     if (form.invalid) {
       return;
     }
+    this.isLoading = true;
     if (this.mode === 'create') {
       this.roomsService.addRoom(
         form.value.title,

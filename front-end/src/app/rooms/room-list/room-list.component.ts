@@ -16,13 +16,16 @@ export class RoomListComponent implements OnInit, OnDestroy {
 
   ];*/
   rooms: Room[] = [];
+  isLoading = false;
   private roomsSub: Subscription;
   constructor(public roomsService: RoomsService) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.roomsService.getRooms();
     this.roomsSub = this.roomsService.getRoomUpdateListener()
       .subscribe((rooms: Room[]) => {
+        this.isLoading = false;
         this.rooms = rooms;
       });
   }

@@ -1,9 +1,11 @@
-<mat-card>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-card *ngIf="!isLoading">
   <div class="row">
     <div class="col-sm">
       <form
       (submit)="onSaveRoom(roomForm)"
-      #roomForm="ngForm">
+      #roomForm="ngForm"
+      >
         <h3 class="center-text" *ngIf="mode == 'create'">Add New Room For Rent</h3>
         <h3 class="center-text" *ngIf="mode == 'edit'">Edit Room For Rent</h3>
 

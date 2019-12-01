@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Room } from './room.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class RoomsService {
   private roomsUpdated = new Subject<Room[]>();
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) {}
   getRooms() {
     this.http.get<{ message: string, rooms: any }>
       ('http://localhost:3000/api/rooms')
@@ -67,6 +68,7 @@ export class RoomsService {
         room.id = id;
         this.rooms.push(room);
         this.roomsUpdated.next([...this.rooms]);
+        this.router.navigate(['/']);
       });
   }
 
@@ -94,7 +96,7 @@ export class RoomsService {
         updatedRooms[oldRoomIndex] = room;
         this.rooms = updatedRooms;
         this.roomsUpdated.next([...this.rooms]);
-        // this.router.navigate(["/"]);
+        this.router.navigate(['/']);
       });
   }
 
