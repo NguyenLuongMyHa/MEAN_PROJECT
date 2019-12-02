@@ -6,6 +6,7 @@ const roomSchema = mongoose.Schema({
     price:  { type: Number, default: 0},
     discount:  { type: Number, default: 0},
     typeid:  { type: Number, default: 1},
+    imagePath: { type: String, required: true },
     date_add: { type: Date, default: Date.now }
 });
 

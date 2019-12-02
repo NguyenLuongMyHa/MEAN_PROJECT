@@ -15,7 +15,9 @@
     <p *ngIf=" room.typeid == 2">room type:  Double</p>
     <p *ngIf=" room.typeid == 3">room type:  Family</p>
     <p *ngIf=" room.typeid == 4">room type:  Family Deluxe</p>
-
+    <div class="room-image">
+      <img [src]="room.imagePath" [alt]="room.title">
+    </div>
     <mat-action-row>
         <a mat-button color="primary" [routerLink]="['/edit', room.id]">EDIT</a>
         <button mat-button color="warn" (click)="onDelete(room.id)">DELETE</button>

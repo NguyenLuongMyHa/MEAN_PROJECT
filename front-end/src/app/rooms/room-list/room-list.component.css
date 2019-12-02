@@ -8,3 +8,12 @@
 mat-spinner {
   margin: auto;
 }
+
+.room-image {
+  width: 100%;
+}
+
+.room-image img {
+  width: 100%;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}

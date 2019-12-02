@@ -13,7 +13,7 @@ export class RoomsService {
   private roomsUpdated = new Subject<Room[]>();
 
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
   getRooms() {
     this.http.get<{ message: string, rooms: any }>
       ('http://localhost:3000/api/rooms')
@@ -26,7 +26,8 @@ export class RoomsService {
             address: room.address,
             price: room.price,
             discount: room.discount,
-            typeid: room.typeid
+            typeid: room.typeid,
+            imagePath: room.imagePath
           };
         });
       }))
@@ -37,35 +38,50 @@ export class RoomsService {
   }
   getRoom(id: string) {
     return this.http.get<{
-      _id: string;
-      title: string;
-      description: string;
-      address: string;
-      price: number;
-      discount: number;
-      typeid: number;
-    }>(
-      'http://localhost:3000/api/rooms/' + id
-    );
+      _id: string,
+      title: string,
+      description: string,
+      address: string,
+      price: number,
+      discount: number,
+      typeid: number,
+      imagePath: string
+    }>('http://localhost:3000/api/rooms/' + id);
   }
   getRoomUpdateListener() {
     return this.roomsUpdated.asObservable();
   }
-  addRoom(roomTitle: string, roomDescription: string, roomAddress: string, roomPrice: number, roomDiscount: number, roomTypeid: number) {
-    const room: Room = {
-      id: null,
-      title: roomTitle,
-      description: roomDescription,
-      address: roomAddress,
-      price: roomPrice,
-      discount: roomDiscount,
-      typeid: roomTypeid
-    };
+  addRoom(roomTitle: string,
+          roomDescription: string,
+          roomAddress: string,
+          roomPrice: number,
+          roomDiscount: number,
+          roomTypeid: number,
+          image: File) {
+    const roomData = new FormData();
+    roomData.append('title', roomTitle);
+    roomData.append('description', roomDescription);
+    roomData.append('address', roomAddress);
+    roomData.append('price', roomPrice.toString());
+    roomData.append('discount', roomDiscount.toString());
+    roomData.append('typeid', roomTypeid.toString());
+    roomData.append('image', image, roomTitle);
     this.http
-      .post<{ message: string, roomId: string }>('http://localhost:3000/api/rooms', room)
+      .post<{ message: string; room: Room }>(
+        'http://localhost:3000/api/rooms',
+        roomData
+      )
       .subscribe(responseData => {
-        const id = responseData.roomId;
-        room.id = id;
+        const room: Room = {
+          id: responseData.room.id,
+          title: roomTitle,
+          description: roomDescription,
+          address: roomAddress,
+          price: roomPrice,
+          discount: roomDiscount,
+          typeid: roomTypeid,
+          imagePath: responseData.room.imagePath
+        };
         this.rooms.push(room);
         this.roomsUpdated.next([...this.rooms]);
         this.router.navigate(['/']);
@@ -78,21 +94,46 @@ export class RoomsService {
              roomAddress: string,
              roomPrice: number,
              roomDiscount: number,
-             roomTypeid: number) {
-    const room: Room = {
-      id: roomid,
-      title: roomTitle,
-      description: roomDescription,
-      address: roomAddress,
-      price: roomPrice,
-      discount: roomDiscount,
-      typeid: roomTypeid
-    };
+             roomTypeid: number,
+             image: File | string) {
+    let roomData: Room | FormData;
+    if (typeof image === 'object') {
+      roomData = new FormData();
+      roomData.append('id', roomid);
+      roomData.append('title', roomTitle);
+      roomData.append('description', roomDescription);
+      roomData.append('address', roomAddress);
+      roomData.append('price', roomPrice.toString());
+      roomData.append('discount', roomDiscount.toString());
+      roomData.append('typeid', roomTypeid.toString());
+      roomData.append('image', image, roomTitle);
+    } else {
+      roomData = {
+        id: roomid,
+        title: roomTitle,
+        description: roomDescription,
+        address: roomAddress,
+        price: roomPrice,
+        discount: roomDiscount,
+        typeid: roomTypeid,
+        imagePath: image
+      };
+    }
     this.http
-      .put('http://localhost:3000/api/rooms/' + roomid, room)
+      .put('http://localhost:3000/api/rooms/' + roomid, roomData)
       .subscribe(response => {
         const updatedRooms = [...this.rooms];
-        const oldRoomIndex = updatedRooms.findIndex(p => p.id === room.id);
+        const oldRoomIndex = updatedRooms.findIndex(p => p.id === roomid);
+        const room: Room = {
+          id: roomid,
+          title: roomTitle,
+          description: roomDescription,
+          address: roomAddress,
+          price: roomPrice,
+          discount: roomDiscount,
+          typeid: roomTypeid,
+          imagePath: ''
+        };
         updatedRooms[oldRoomIndex] = room;
         this.rooms = updatedRooms;
         this.roomsUpdated.next([...this.rooms]);

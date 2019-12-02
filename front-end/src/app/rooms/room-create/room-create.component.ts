@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { RoomsService } from '../rooms.service';
 import { Room } from '../room.model';
+import { mimeType } from './mime-type.validator';
 
 export interface ProductType {
   id: number;
@@ -60,7 +61,8 @@ export class RoomCreateComponent implements OnInit {
         validators: [Validators.required]
       }),
       image: new FormControl(null, {
-        validators: [Validators.required]
+        validators: [Validators.required],
+        asyncValidators: [mimeType]
       })
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -78,7 +80,8 @@ export class RoomCreateComponent implements OnInit {
               address: roomData.address,
               price: roomData.price,
               discount: roomData.discount,
-              typeid: roomData.typeid
+              typeid: roomData.typeid,
+              imagePath: roomData.imagePath
             };
             this.form.setValue({
               title: this.room.title,
@@ -86,7 +89,8 @@ export class RoomCreateComponent implements OnInit {
               address: this.room.address,
               price: this.room.price,
               discount: this.room.discount,
-              typeid: this.room.typeid
+              typeid: this.room.typeid,
+              image: this.room.imagePath
             });
           });
       } else {
@@ -119,6 +123,7 @@ export class RoomCreateComponent implements OnInit {
         this.form.value.price,
         this.form.value.discount,
         this.form.value.typeid,
+        this.form.value.image
       );
     } else {
       this.roomsService.updateRoom(
@@ -129,6 +134,7 @@ export class RoomCreateComponent implements OnInit {
         this.form.value.price,
         this.form.value.discount,
         this.form.value.typeid,
+        this.form.value.image
       );
     }
     this.form.reset();
