@@ -76,12 +76,26 @@ router.put("/:id",  multer({ storage: storage }).single("image"),
 });
 
 router.get("", (req, res, next) => {
-    Room
-        .find()
-        .then(documents => {
+    
+    const pageSize = +req.query.pageSize;
+    const currentPage = +req.query.page;
+    const roomQuery = Room.find();
+    let fetchedRooms;
+    if(pageSize && currentPage)
+    {
+        roomQuery.skip(pageSize * (currentPage - 1))
+        .limit(pageSize);
+    }
+    roomQuery
+        .then(documents =>{
+            fetchedRooms = documents
+            return Room.count();
+        })
+        .then(count => {
             res.status(200).json({
                 message: 'Rooms fetched successfully!',
-                rooms: documents
+                rooms: fetchedRooms,
+                maxRooms: count
             });
         });
 });

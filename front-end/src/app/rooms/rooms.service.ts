@@ -10,15 +10,18 @@ import { Router } from '@angular/router';
 })
 export class RoomsService {
   private rooms: Room[] = [];
-  private roomsUpdated = new Subject<Room[]>();
+  private roomsUpdated = new Subject<{rooms: Room[], roomCount: number}>();
+  private roomsUpdated2 = new Subject<Room[]>();
 
 
   constructor(private http: HttpClient, private router: Router) { }
-  getRooms() {
-    this.http.get<{ message: string, rooms: any }>
-      ('http://localhost:3000/api/rooms')
-      .pipe(map((roomData) => {
-        return roomData.rooms.map(room => {
+  getRooms(perPage: number, currentPage: number) {
+    const queryParams = `?pageSize=${perPage}&page=${currentPage}`;
+    this.http.get<{ message: string, rooms: any, maxRooms: number}>
+      ('http://localhost:3000/api/rooms' + queryParams)
+      .pipe(map(roomData => {
+        return {
+          rooms: roomData.rooms.map(room => {
           return {
             id: room._id,
             title: room.title,
@@ -29,11 +32,13 @@ export class RoomsService {
             typeid: room.typeid,
             imagePath: room.imagePath
           };
-        });
+        }),
+        maxRooms: roomData.maxRooms
+      };
       }))
-      .subscribe((transformedRooms) => {
-        this.rooms = transformedRooms;
-        this.roomsUpdated.next([...this.rooms]);
+      .subscribe((transformedRoomsData) => {
+        this.rooms = transformedRoomsData.rooms;
+        this.roomsUpdated.next({ rooms: [...this.rooms], roomCount: transformedRoomsData.maxRooms});
       });
   }
   getRoom(id: string) {
@@ -72,6 +77,7 @@ export class RoomsService {
         roomData
       )
       .subscribe(responseData => {
+
         const room: Room = {
           id: responseData.room.id,
           title: roomTitle,
@@ -83,7 +89,7 @@ export class RoomsService {
           imagePath: responseData.room.imagePath
         };
         this.rooms.push(room);
-        this.roomsUpdated.next([...this.rooms]);
+        this.roomsUpdated2.next([...this.rooms]);
         this.router.navigate(['/']);
       });
   }
@@ -136,17 +142,18 @@ export class RoomsService {
         };
         updatedRooms[oldRoomIndex] = room;
         this.rooms = updatedRooms;
-        this.roomsUpdated.next([...this.rooms]);
+        this.roomsUpdated2.next([...this.rooms]);
         this.router.navigate(['/']);
       });
   }
 
   deleteRoom(roomId: string) {
-    this.http.delete('http://localhost:3000/api/rooms/' + roomId)
-      .subscribe(() => {
+    return this.http.delete('http://localhost:3000/api/rooms/' + roomId)
+      /*
+    .subscribe(() => {
         const updatedRooms = this.rooms.filter(room => room.id !== roomId);
         this.rooms = updatedRooms;
         this.roomsUpdated.next([...this.rooms]);
-      });
+      })*/;
   }
 }

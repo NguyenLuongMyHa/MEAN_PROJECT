@@ -25,4 +25,6 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+<mat-paginator [length]="totalPage" [pageSize]="perPage" [pageSizeOptions]="pagesizeOption" (page)="onchangedPage($event)" *ngIf="rooms.length >0" ></mat-paginator>
 <h3 class="center-text"  *ngIf="!isLoading && rooms.length <=0">No rooms added yet!</h3>
+
