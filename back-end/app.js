@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const roomsRoutes = require('./routes/rooms');
+const userRoutes = require('./routes/user');
 const app = express();
 
 mongoose.connect("mongodb+srv://HaNguyen:HaNguyen@clustermean-wlhzz.mongodb.net/meanproject?retryWrites=true&w=majority", {
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use("/api/rooms", roomsRoutes);
+app.use("/api/user", userRoutes);
 
 module.exports = app;
 

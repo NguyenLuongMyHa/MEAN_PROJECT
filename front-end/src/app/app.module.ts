@@ -20,13 +20,17 @@ import { RoomCreateComponent } from './rooms/room-create/room-create.component';
 import { HeaderComponent } from './header/header.component';
 import { RoomListComponent } from './rooms/room-list/room-list.component';
 import { AppRoutingModule } from './app-routing.module';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     RoomCreateComponent,
-    RoomListComponent
+    RoomListComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
