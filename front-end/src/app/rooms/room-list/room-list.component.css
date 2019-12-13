@@ -21,3 +21,13 @@ mat-spinner {
 mat-paginator {
   margin-top: 1rem;
 }
+
+.my-card {
+  max-width: 800px;
+  margin: auto;
+  margin-bottom: 1rem;
+}
+ngb-carousel{
+  margin: auto;
+  width: max-content;
+}

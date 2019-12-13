@@ -19,8 +19,8 @@ export class RoomListComponent implements OnInit, OnDestroy {
   ];*/
   rooms: Room[] = [];
   totalPage = 0;
-  perPage = 2;
-  pagesizeOption = [1, 2, 5, 10];
+  perPage = 3;
+  pagesizeOption = [1, 3, 5, 10];
   currentPage = 1;
   isLoading = false;
   private roomsSub: Subscription;

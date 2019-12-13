@@ -23,7 +23,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,7 +48,8 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     MatSelectModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
