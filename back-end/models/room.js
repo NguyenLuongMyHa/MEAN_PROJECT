@@ -7,7 +7,8 @@ const roomSchema = mongoose.Schema({
     discount:  { type: Number, default: 0},
     typeid:  { type: Number, default: 1},
     imagePath: { type: String, required: true },
-    date_add: { type: Date, default: Date.now }
+    date_add: { type: Date, default: Date.now },
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 });
 
 module.exports = mongoose.model('Room', roomSchema);

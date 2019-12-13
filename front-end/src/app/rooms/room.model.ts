@@ -7,4 +7,6 @@ export class Room {
   discount: number;
   typeid: number;
   imagePath: string;
+  creator: string;
+
 }

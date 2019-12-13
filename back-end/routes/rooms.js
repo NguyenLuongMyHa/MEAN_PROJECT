@@ -14,84 +14,92 @@ const MIME_TYPE_MAP = {
 };
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const isValid = MIME_TYPE_MAP[file.mimetype];
-      let error = new Error("Invalid mime type");
-      if (isValid) {
-        error = null;
-      }
-      cb(error, "images");
+        const isValid = MIME_TYPE_MAP[file.mimetype];
+        let error = new Error("Invalid mime type");
+        if (isValid) {
+            error = null;
+        }
+        cb(error, "images");
     },
     filename: (req, file, cb) => {
-      const name = file.originalname
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-      const ext = MIME_TYPE_MAP[file.mimetype];
-      cb(null, name + "-" + Date.now() + "." + ext);
+        const name = file.originalname
+            .toLowerCase()
+            .split(" ")
+            .join("-");
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        cb(null, name + "-" + Date.now() + "." + ext);
     }
-  });
+});
 
-router.post("",  
-checkAuth,
-multer({ storage: storage }).single("image"),
-(req, res, next) => {
-  const url = req.protocol + "://" + req.get("host");
-    const room = new Room({
-        title: req.body.title,
-        description: req.body.description,
-        address: req.body.address,
-        price: req.body.price,
-        discount: req.body.discount,
-        typeid: req.body.typeid,
-        imagePath: url + "/images/" + req.file.filename
+router.post("",
+    checkAuth,
+    multer({ storage: storage }).single("image"),
+    (req, res, next) => {
+        const url = req.protocol + "://" + req.get("host");
+        const room = new Room({
+            title: req.body.title,
+            description: req.body.description,
+            address: req.body.address,
+            price: req.body.price,
+            discount: req.body.discount,
+            typeid: req.body.typeid,
+            imagePath: url + "/images/" + req.file.filename,
+            creator: req.userData.userId
+        });
+        room.save().then(createdRoom => {
+            console.log(room);
+            res.status(201).json({
+                message: "Room added successfully",
+                room: {
+                    ...createdRoom,
+                    id: createdRoom._id
+                }
+            });
+        });
     });
-    room.save().then(createdRoom => {
-        console.log(room);
-        res.status(201).json({
-            message: "Room added successfully",
-            room: {
-                ...createdRoom,
-                id: createdRoom._id
+router.put("/:id", 
+checkAuth, 
+multer({ storage: storage }).single("image"),
+    (req, res, next) => {
+        let imagePath = req.body.imagePath;
+        if (req.file) {
+            const url = req.protocol + "://" + req.get("host");
+            imagePath = url + "/images/" + req.file.filename
+        }
+        const room = new Room({
+            _id: req.body.id,
+            title: req.body.title,
+            description: req.body.description,
+            address: req.body.address,
+            price: req.body.price,
+            discount: req.body.discount,
+            typeid: req.body.typeid,
+            imagePath: imagePath,
+            creator: req.userData.userId
+        });
+        Room.updateOne({ _id: req.params.id, creator: req.userData.userId },
+            room
+        ).then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({ message: "Update successful!" });
+            } else {
+                res.status(401).json({ message: "Not authorized!" });
             }
         });
     });
-});
-router.put("/:id", checkAuth, multer({ storage: storage }).single("image"),
-(req, res, next) => {
-  let imagePath = req.body.imagePath;
-  if (req.file) {
-    const url = req.protocol + "://" + req.get("host");
-    imagePath = url + "/images/" + req.file.filename
-  }
-    const room = new Room({
-        _id: req.body.id,
-        title: req.body.title,
-        description: req.body.description,
-        address: req.body.address,
-        price: req.body.price,
-        discount: req.body.discount,
-        typeid: req.body.typeid,
-        imagePath: imagePath
-    });
-    Room.updateOne({ _id: req.params.id }, room).then(result => {
-        console.log(result);
-        res.status(200).json({ message: "Update successful!" });
-    });
-});
 
 router.get("", (req, res, next) => {
-    
+
     const pageSize = +req.query.pageSize;
     const currentPage = +req.query.page;
     const roomQuery = Room.find();
     let fetchedRooms;
-    if(pageSize && currentPage)
-    {
+    if (pageSize && currentPage) {
         roomQuery.skip(pageSize * (currentPage - 1))
-        .limit(pageSize);
+            .limit(pageSize);
     }
     roomQuery
-        .then(documents =>{
+        .then(documents => {
             fetchedRooms = documents
             return Room.count();
         })
@@ -113,15 +121,16 @@ router.get("/:id", (req, res, next) => {
     });
 });
 router.delete("/:id", checkAuth, (req, res, next) => {
-    Room.deleteOne({ _id: req.params.id })
-        .then(result => {
+    Room.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(
+        result => {
             console.log(result);
-            res.status(200).json({ message: 'Room deleted!' });
-        });
-});
-
-router.get('/', function (req, res) {
-    res.status(200).send('Hello Huyh Le');
+            if (result.n > 0) {
+                res.status(200).json({ message: "Deletion successful!" });
+            } else {
+                res.status(401).json({ message: "Not authorized!" });
+            }
+        }
+    );
 });
 
 module.exports = router;

@@ -30,7 +30,8 @@ export class RoomsService {
             price: room.price,
             discount: room.discount,
             typeid: room.typeid,
-            imagePath: room.imagePath
+            imagePath: room.imagePath,
+            creator: room.creator
           };
         }),
         maxRooms: roomData.maxRooms
@@ -38,7 +39,9 @@ export class RoomsService {
       }))
       .subscribe((transformedRoomsData) => {
         this.rooms = transformedRoomsData.rooms;
-        this.roomsUpdated.next({ rooms: [...this.rooms], roomCount: transformedRoomsData.maxRooms});
+        this.roomsUpdated.next({
+          rooms: [...this.rooms],
+          roomCount: transformedRoomsData.maxRooms});
       });
   }
   getRoom(id: string) {
@@ -50,7 +53,8 @@ export class RoomsService {
       price: number,
       discount: number,
       typeid: number,
-      imagePath: string
+      imagePath: string,
+      creator: string
     }>('http://localhost:3000/api/rooms/' + id);
   }
   getRoomUpdateListener() {
@@ -86,7 +90,8 @@ export class RoomsService {
           price: roomPrice,
           discount: roomDiscount,
           typeid: roomTypeid,
-          imagePath: responseData.room.imagePath
+          imagePath: responseData.room.imagePath,
+          creator: responseData.room.creator
         };
         this.rooms.push(room);
         this.roomsUpdated2.next([...this.rooms]);
@@ -122,7 +127,8 @@ export class RoomsService {
         price: roomPrice,
         discount: roomDiscount,
         typeid: roomTypeid,
-        imagePath: image
+        imagePath: image,
+        creator: null
       };
     }
     this.http
@@ -138,7 +144,8 @@ export class RoomsService {
           price: roomPrice,
           discount: roomDiscount,
           typeid: roomTypeid,
-          imagePath: ''
+          imagePath: '',
+          creator: null
         };
         updatedRooms[oldRoomIndex] = room;
         this.rooms = updatedRooms;

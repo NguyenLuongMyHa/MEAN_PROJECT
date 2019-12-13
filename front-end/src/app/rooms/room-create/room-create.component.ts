@@ -81,7 +81,8 @@ export class RoomCreateComponent implements OnInit {
               price: roomData.price,
               discount: roomData.discount,
               typeid: roomData.typeid,
-              imagePath: roomData.imagePath
+              imagePath: roomData.imagePath,
+              creator: roomData.creator
             };
             this.form.setValue({
               title: this.room.title,

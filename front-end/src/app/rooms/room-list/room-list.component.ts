@@ -25,6 +25,7 @@ export class RoomListComponent implements OnInit, OnDestroy {
   isLoading = false;
   private roomsSub: Subscription;
   private authStatusSub: Subscription;
+  userId: string;
   userIsAuthenticated: boolean;
 
   constructor(
@@ -35,6 +36,7 @@ export class RoomListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.roomsService.getRooms(this.perPage, this.currentPage);
+    this.userId = this.authService.getUserId();
     this.roomsSub = this.roomsService
       .getRoomUpdateListener()
       .subscribe((roomData: {rooms: Room[], roomCount: number}) => {
@@ -47,6 +49,7 @@ export class RoomListComponent implements OnInit, OnDestroy {
         .getAuthStatusListener()
         .subscribe(isAuthenticated => {
           this.userIsAuthenticated = isAuthenticated;
+          this.userId = this.authService.getUserId();
         });
     }
 
