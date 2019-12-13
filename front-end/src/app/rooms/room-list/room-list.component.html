@@ -41,21 +41,16 @@
       <img mat-card-image [src]="room.imagePath" [alt]="room.title">
 
       <mat-card-content>
-        <label>Description:</label><br>
+          <label class="text-info">Description:</label><br>
         <p>{{ room.description }}</p>
-        <label>Type:</label><br>
+        <label class="text-info">Type:</label><br>
         <p *ngIf=" room.typeid == 1">Single</p>
         <p *ngIf=" room.typeid == 2">Double</p>
         <p *ngIf=" room.typeid == 3">Family</p>
         <p *ngIf=" room.typeid == 4">Family Deluxe</p>
-        <label>Price:</label><br>
+        <label class="text-info">Price:</label><br>
         <p>{{ room.price }} VND</p>
       </mat-card-content>
-      <mat-card-actions *ngIf="!userIsAuthenticated">
-        <button mat-raised-button color="primary">RENT</button>
-        <button mat-raised-button>LIKE</button>
-        <button mat-raised-button>SHARE</button>
-      </mat-card-actions>
       <mat-card-actions *ngIf="userIsAuthenticated && userId === room.creator">
           <a mat-button color="primary" [routerLink]="['/edit', room.id]">EDIT</a>
           <button mat-button color="warn" (click)="onDelete(room.id)">DELETE</button>
