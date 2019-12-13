@@ -28,6 +28,7 @@ mat-paginator {
   margin-bottom: 1rem;
 }
 ngb-carousel{
+  max-width: 800px;
   margin: auto;
-  width: max-content;
+  margin-bottom: 1rem;
 }
