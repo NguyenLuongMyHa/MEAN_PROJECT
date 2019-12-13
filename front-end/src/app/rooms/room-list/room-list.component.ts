@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { Room } from '../room.model';
 import { RoomsService } from '../rooms.service';
 import { PageEvent } from '@angular/material';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-room-list',
@@ -23,18 +24,32 @@ export class RoomListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   isLoading = false;
   private roomsSub: Subscription;
-  constructor(public roomsService: RoomsService) {}
+  private authStatusSub: Subscription;
+  userIsAuthenticated: boolean;
+
+  constructor(
+    public roomsService: RoomsService,
+    private authService: AuthService
+    ) {}
 
   ngOnInit() {
     this.isLoading = true;
     this.roomsService.getRooms(this.perPage, this.currentPage);
-    this.roomsSub = this.roomsService.getRoomUpdateListener()
+    this.roomsSub = this.roomsService
+      .getRoomUpdateListener()
       .subscribe((roomData: {rooms: Room[], roomCount: number}) => {
         this.isLoading = false;
         this.totalPage = roomData.roomCount;
         this.rooms = roomData.rooms;
       });
-  }
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatusSub = this.authService
+        .getAuthStatusListener()
+        .subscribe(isAuthenticated => {
+          this.userIsAuthenticated = isAuthenticated;
+        });
+    }
+
   onDelete(roomId: string) {
     this.isLoading = true;
     this.roomsService.deleteRoom(roomId).subscribe(() => {
@@ -44,6 +59,7 @@ export class RoomListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.roomsSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
 
   onchangedPage(pageData: PageEvent) {

@@ -12,7 +12,9 @@ a {
 span{
   margin-left: 10%;
 }
-
+ul {
+  display: flex;
+}
 .spacer {
   flex: 1 1 auto;
 }

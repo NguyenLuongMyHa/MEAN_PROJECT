@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="card o-hidden border-1 shadow-lg my-4">
+
+      <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="p-5">
+              <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4">Create new account!</h1>
+              </div>
+              <mat-spinner *ngIf="isLoading"></mat-spinner>
+              <form (ngSubmit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
+                <div class="form-group">
+                  <input type="text" name="name" ngModel class="form-control form-control-user" placeholder="Fullname">
+                </div>
+                <div class="form-group">
+                  <input name="email" ngModel type="email" class="form-control form-control-user"
+                    placeholder="Email" #emailInput="ngModel" required email>
+                  <mat-error *ngIf="emailInput.invalid">Please enter a valid email.</mat-error>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="password" name="password" ngModel class="form-control form-control-user"
+                      placeholder="Password">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="password" name="password_confirmation" ngModel class="form-control form-control-user"
+                      placeholder="Confirm password">
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit" *ngIf="!isLoading">
+                  Register
+                </button>
+              </form>
+
+              <hr>
+              <div class="text-center">
+                <a class="small" href="#">Already have an account? Log in!</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
